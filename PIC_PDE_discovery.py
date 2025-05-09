@@ -3,8 +3,13 @@ This is the PIC method code for the left term is ut
 Made by Hao Xu
 2022.8
 '''
+import os
+
+os.environ['CUDA_LAUNCH_BLOCKING']="1"
+os.environ['TORCH_USE_CUDA_DSA'] = "1"
 
 from neural_network import ANN, random_data
+
 import numpy as np
 import torch
 from torch.autograd import Variable
@@ -587,8 +592,8 @@ class GGA():
 
         for iter in range(self.n_generations):
             print(f'--------{iter}----------------')
-            np.save('../best_save.npy', np.array(self.Chrom.copy()[0]), allow_pickle=True)
-            np.save('../best_save_diff.npy', np.array(self.Chrom_diff.copy()[0]), allow_pickle=True)
+            np.save('../best_save.npy', np.array(self.Chrom.copy()[0], dtype=object), allow_pickle=True)
+            np.save('../best_save_diff.npy', np.array(self.Chrom_diff.copy()[0], dtype=object), allow_pickle=True)
             best =self.Chrom.copy()[0]
             best_nc=self.Chrom_diff.copy()[0]
             GGA.cross_over(self)
@@ -660,9 +665,9 @@ def Generate_meta_data(Net,Equation_name, choose, noise_level, trail_num, Load_s
     return Theta,x.data.numpy(),t.data.numpy()
 
 #============Params=============
-Equation_name='Convection_diffusion_equation'
+Equation_name='Burgers_equation'
 choose=10000        #train num
-noise_level=150      #noise level
+noise_level=0      #noise level
 noise_type='Gaussian' #Gaussian or Uniform or field
 trail_num='PIS'    #save_name
 Learning_Rate=0.001
@@ -913,6 +918,8 @@ database_test = Variable(database_test, requires_grad=True).to(DEVICE)
 
 num=0
 torch.manual_seed(525)
+
+# torch.cuda.empty_cache()
 
 #NN
 MSELoss = torch.nn.MSELoss()

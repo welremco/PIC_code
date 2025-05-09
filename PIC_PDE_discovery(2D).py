@@ -608,8 +608,10 @@ class GGA():
         GGA.delete_duplicates(self)
         for iter in range(self.n_generations):
             print(f'--------{iter}----------------')
-            np.save('../best_save.npy', np.array(self.Chrom.copy()[0]), allow_pickle=True)
-            np.save('../best_save_diff.npy', np.array(self.Chrom_diff.copy()[0]), allow_pickle=True)
+            print(self.Chrom.copy()[0])
+
+            np.save('../best_save.npy', np.array(self.Chrom.copy()[0], dtype=object), allow_pickle=True)
+            np.save('../best_save_diff.npy', np.array(self.Chrom_diff.copy()[0], dtype=object), allow_pickle=True)
             best =self.Chrom.copy()[0]
             best_nc=self.Chrom_diff.copy()[0]
             GGA.cross_over(self)
